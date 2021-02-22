@@ -1,0 +1,2 @@
+rootProject.name = "WifiBell"
+include ':app'
