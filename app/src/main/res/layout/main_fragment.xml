@@ -31,11 +31,21 @@
             android:id="@+id/pingImage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:src="@drawable/ic_baseline_trip_origin_24"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/rssiText"
-            android:src="@drawable/ic_baseline_trip_origin_24"/>
+            app:layout_constraintTop_toBottomOf="@+id/rssiText" />
+
+        <ImageView
+            android:id="@+id/statusImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@{vm.logo}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/rssiText" />
         <TextView
             android:id="@+id/signalLevelText"
             android:layout_width="wrap_content"
@@ -44,7 +54,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/rssiText" />
+            app:layout_constraintTop_toBottomOf="@+id/statusImage" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

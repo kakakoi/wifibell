@@ -1,12 +1,11 @@
 package com.kakakoi.wifibell.ui.main
 
 import android.app.Application
+import android.graphics.drawable.Drawable
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
-import android.media.AudioAttributes
-import android.media.SoundPool
 import android.net.*
 import android.net.wifi.WifiManager
 import android.os.Build
@@ -15,13 +14,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import com.kakakoi.wifibell.R
+import com.kakakoi.wifibell.model.PingSound
 
 
 class MainViewModel(application: Application) : AndroidViewModel(application), SensorEventListener {
 
     companion object {
-        const val SIGNAL_LEVEL = 100
         const val TAG = "MainViewModel"
     }
 
@@ -29,7 +29,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application), S
         application.getSystemService(AppCompatActivity.CONNECTIVITY_SERVICE) as ConnectivityManager
     private val wm = application.getSystemService(AppCompatActivity.WIFI_SERVICE) as WifiManager
     private val sm = application.getSystemService(AppCompatActivity.SENSOR_SERVICE) as SensorManager
-
+    val sound = PingSound(application)
+    val SIGNAL_LEVEL = 10
 
     private val request = NetworkRequest.Builder()
         .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
@@ -80,9 +81,15 @@ class MainViewModel(application: Application) : AndroidViewModel(application), S
     val signalLevelText: LiveData<String>
         get() = _signalLevelText
 
+    val logo: LiveData<Drawable> = Transformations.map(signalLevel) {
+        when {
+            signalLevel.value!! > SIGNAL_LEVEL / 2 -> application.getDrawable(R.drawable.ic_baseline_near_24)
+            else -> application.getDrawable(R.drawable.ic_baseline_notifications_active_24)
+        }
+    }
+
     init {
         load()
-        sound(application)
         val accel: Sensor = sm.getDefaultSensor(
             Sensor.TYPE_STEP_COUNTER
         )
@@ -102,36 +109,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application), S
         } else {
             _signalLevel.value =
                 WifiManager.calculateSignalLevel(info.rssi, SIGNAL_LEVEL)
-            _signalLevelText.value = _signalLevel.value.toString()
-        }
-    }
-
-    private lateinit var soundPool: SoundPool
-    private var soundOne = 0
-
-    private fun sound(application: Application) {
-        val audioAttributes = AudioAttributes.Builder()
-            // USAGE_MEDIA
-            // USAGE_GAME
-            .setUsage(AudioAttributes.USAGE_GAME)
-            // CONTENT_TYPE_MUSIC
-            // CONTENT_TYPE_SPEECH, etc.
-            .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
-            .build()
-
-        soundPool = SoundPool.Builder()
-            .setAudioAttributes(audioAttributes)
-            // ストリーム数に応じて
-            .setMaxStreams(2)
-            .build()
-
-        // one.wav をロードしておく
-        soundOne = soundPool.load(application, R.raw.pi, 1)
-
-        // load が終わったか確認する場合
-        soundPool.setOnLoadCompleteListener { soundPool, sampleId, status ->
-            Log.d("debug", "sampleId=$sampleId")
-            Log.d("debug", "status=$status")
+            _signalLevelText.value = "LEVEL:" + _signalLevel.value.toString()
         }
     }
 
@@ -140,13 +118,10 @@ class MainViewModel(application: Application) : AndroidViewModel(application), S
         cm.bindProcessToNetwork(null)
         cm.unregisterNetworkCallback(networkCallback)
         sm.unregisterListener(this);
-
     }
 
     override fun onSensorChanged(event: SensorEvent?) {
         load()
-        // play(ロードしたID, 左音量, 右音量, 優先度, ループ, 再生速度)
-        soundPool.play(soundOne, 1.0f, 1.0f, 0, 0, 1.0f)
         Log.d(TAG, "onSensorChanged: ")
     }
 
