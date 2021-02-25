@@ -21,6 +21,7 @@ import com.kakakoi.wifibell.model.PingSound
 
 class MainViewModel(application: Application) : AndroidViewModel(application), SensorEventListener {
 
+    //TODO mobile networkの時にテザリング要求
     companion object {
         const val TAG = "MainViewModel"
     }
@@ -89,6 +90,13 @@ class MainViewModel(application: Application) : AndroidViewModel(application), S
         }
     }
 
+    private var _ssidText: MutableLiveData<String> =
+        MutableLiveData<String>().also { mutableLiveData ->
+            mutableLiveData.value = "-"
+        }
+    val ssidText: LiveData<String>
+        get() = _ssidText
+
     init {
         load()
         val accel: Sensor = sm.getDefaultSensor(
@@ -103,6 +111,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application), S
 
         _rssi.value = info.rssi
         _rssiText.value = info.rssi.toString()
+
+        _ssidText.value = info.ssid
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             _signalLevel.value = wm.calculateSignalLevel(info.rssi)

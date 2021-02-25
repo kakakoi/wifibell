@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">WifiBell</string>
+    <string name="ping">ping</string>
+    <string name="status">status</string>
 </resources>
