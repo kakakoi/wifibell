@@ -14,7 +14,6 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.kakakoi.wifibell.R
 import com.kakakoi.wifibell.databinding.MainFragmentBinding
-import com.kakakoi.wifibell.model.PingSound
 
 
 class MainFragment : Fragment() {
@@ -26,12 +25,12 @@ class MainFragment : Fragment() {
 
     private lateinit var viewModel: MainViewModel
     private lateinit var binding: MainFragmentBinding
-    private lateinit var sound: PingSound
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        Log.d(TAG, "onCreateView: ")
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         binding = MainFragmentBinding.inflate(inflater, container, false)
         binding.vm = viewModel
@@ -39,7 +38,7 @@ class MainFragment : Fragment() {
 
         val signalLevelObserver = Observer<Int> { level ->
             binding.signalLevelText.setTextColor(Color.rgb(level, 0, 0))
-            if (level > viewModel.SIGNAL_LEVEL / 2) {
+            if (level > viewModel.SIGNAL_LEVEL_THRESHOLD) {
                 binding.pingImage.imageTintList =
                     context?.getColorStateList(R.color.ping_color_state_list)
                 binding.statusImage.imageTintList =
@@ -51,20 +50,7 @@ class MainFragment : Fragment() {
                     context?.getColorStateList(R.color.ping_color_warn_state_list)
                 binding.statusImage.imageTintList =
                     context?.getColorStateList(R.color.ping_color_warn_state_list)
-/*
-                val vibrator = context?.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                    val vibrationEffect = VibrationEffect.createOneShot(5000,
-                        VibrationEffect.DEFAULT_AMPLITUDE
-                    )
-                    vibrator.vibrate(vibrationEffect)
-                } else {
-                    vibrator.vibrate(5000)
-                }
-
- */
                 viewModel.sound.play()
-
                 Log.d(TAG, "onCreateView: level < 70")
             }
             animate(binding.pingImage)
@@ -72,11 +58,6 @@ class MainFragment : Fragment() {
         viewModel.signalLevel.observe(viewLifecycleOwner, signalLevelObserver)
 
         return binding.root
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        viewModel.sound.close()
     }
 
     private fun animate(img: ImageView) {

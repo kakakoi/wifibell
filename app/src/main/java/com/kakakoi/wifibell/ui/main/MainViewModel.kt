@@ -31,6 +31,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application), S
     private val sm = application.getSystemService(AppCompatActivity.SENSOR_SERVICE) as SensorManager
     val sound = PingSound(application)
     val SIGNAL_LEVEL = 10
+    val SIGNAL_LEVEL_THRESHOLD = SIGNAL_LEVEL * 0.5
 
     private val request = NetworkRequest.Builder()
         .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
@@ -83,7 +84,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application), S
 
     val logo: LiveData<Drawable> = Transformations.map(signalLevel) {
         when {
-            signalLevel.value!! > SIGNAL_LEVEL / 2 -> application.getDrawable(R.drawable.ic_baseline_near_24)
+            signalLevel.value!! > SIGNAL_LEVEL_THRESHOLD -> application.getDrawable(R.drawable.ic_baseline_near_24)
             else -> application.getDrawable(R.drawable.ic_baseline_notifications_active_24)
         }
     }

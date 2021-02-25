@@ -14,7 +14,7 @@ class PingSound(context: Context) {
 
     private lateinit var soundPool: SoundPool
     private var soundResource = 0
-    private var isPlay = false
+    var isPlay = false
 
     init {
         sound(context)
@@ -49,18 +49,18 @@ class PingSound(context: Context) {
     fun play() {
         if (isPlay) {
             soundPool.resume(soundResource)
-            Log.d(TAG, "resume: streamID $soundResource")
+            Log.d(TAG, "resume: streamID $soundResource isPlay $isPlay")
         } else {
             // play(ロードしたID, 左音量, 右音量, 優先度, ループ, 再生速度)
             soundPool?.play(soundResource, 1.0f, 1.0f, 0, -1, 1.0f)
             isPlay = true
-            Log.d(TAG, "play: streamID $soundResource")
+            Log.d(TAG, "play: streamID $soundResource isPlay $isPlay")
         }
     }
 
     fun stop() {
         soundPool.pause(soundResource)
-        Log.d(TAG, "stop: streamID $soundResource")
+        Log.d(TAG, "stop: streamID $soundResource isPlay $isPlay")
     }
 
     fun close() {
