@@ -24,6 +24,12 @@ class MainViewModel(application: Application) : AndroidViewModel(application), S
     //TODO mobile networkの時にテザリング要求
     companion object {
         const val TAG = "MainViewModel"
+        const val SIGNAL_LEVEL = 10
+        const val SIGNAL_LEVEL_SAFE = 0.7
+        const val SIGNAL_LEVEL_NORMAL = 0.5
+        const val SIGNAL_LEVEL_WARN = 0.3
+        lateinit var SSID_TEXT:String
+        lateinit var LEVEL_TEXT:String
     }
 
     private val cm: ConnectivityManager =
@@ -31,8 +37,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application), S
     private val wm = application.getSystemService(AppCompatActivity.WIFI_SERVICE) as WifiManager
     private val sm = application.getSystemService(AppCompatActivity.SENSOR_SERVICE) as SensorManager
     val sound = PingSound(application)
-    val SIGNAL_LEVEL = 10
-    val SIGNAL_LEVEL_THRESHOLD = SIGNAL_LEVEL * 0.5
+    val SIGNAL_LEVEL_THRESHOLD = SIGNAL_LEVEL * SIGNAL_LEVEL_WARN
 
     private val request = NetworkRequest.Builder()
         .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
@@ -85,8 +90,22 @@ class MainViewModel(application: Application) : AndroidViewModel(application), S
 
     val logo: LiveData<Drawable> = Transformations.map(signalLevel) {
         when {
-            signalLevel.value!! > SIGNAL_LEVEL_THRESHOLD -> application.getDrawable(R.drawable.ic_baseline_near_24)
-            else -> application.getDrawable(R.drawable.ic_baseline_notifications_active_24)
+            signalLevel.value!! > SIGNAL_LEVEL_THRESHOLD -> application.getDrawable(R.drawable.ic_baseline_escalator_warning_100)
+            else -> application.getDrawable(R.drawable.ic_baseline_person_100)
+        }
+    }
+
+    val animationResId: LiveData<Int> = Transformations.map(signalLevel) {
+        when {
+            signalLevel.value!! > SIGNAL_LEVEL_THRESHOLD -> R.raw.rocket_in_space
+            else -> R.raw.lighthouse
+        }
+    }
+
+    val stateText: LiveData<String> = Transformations.map(signalLevel) {
+        when {
+            signalLevel.value!! > SIGNAL_LEVEL_THRESHOLD -> application.getString(R.string.state_near)
+            else -> application.getString(R.string.state_far)
         }
     }
 
@@ -98,6 +117,9 @@ class MainViewModel(application: Application) : AndroidViewModel(application), S
         get() = _ssidText
 
     init {
+        SSID_TEXT = application.getString(R.string.ssid)
+        LEVEL_TEXT = application.getString(R.string.level)
+
         load()
         val accel: Sensor = sm.getDefaultSensor(
             Sensor.TYPE_STEP_COUNTER
@@ -112,7 +134,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application), S
         _rssi.value = info.rssi
         _rssiText.value = info.rssi.toString()
 
-        _ssidText.value = info.ssid
+        _ssidText.value = SSID_TEXT + info.ssid
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             _signalLevel.value = wm.calculateSignalLevel(info.rssi)
@@ -120,7 +142,14 @@ class MainViewModel(application: Application) : AndroidViewModel(application), S
         } else {
             _signalLevel.value =
                 WifiManager.calculateSignalLevel(info.rssi, SIGNAL_LEVEL)
-            _signalLevelText.value = "LEVEL:" + _signalLevel.value.toString()
+            val distance = SIGNAL_LEVEL - _signalLevel.value!!
+            val sb = StringBuilder("<")
+            for (i in 0..distance) sb.append("-")
+            sb.append(LEVEL_TEXT)
+            sb.append(_signalLevel.value)
+            for (i in 0..distance) sb.append("-")
+            sb.append(">")
+            _signalLevelText.value = sb.toString()
         }
     }
 

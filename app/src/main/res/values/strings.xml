@@ -2,4 +2,10 @@
     <string name="app_name">WifiBell</string>
     <string name="ping">ping</string>
     <string name="status">status</string>
+    <string name="state_near">あそぼう！</string>
+    <string name="state_far">どこにいるの？</string>
+    <string name="level">あんしんレベル</string>
+    <string name="ssid_wifi">SSIDが保護者スマホでなければWIFIを確認</string>
+    <string name="navigation_description">下からスワイプで操作できます</string>
+    <string name="ssid">SSID:</string>
 </resources>
