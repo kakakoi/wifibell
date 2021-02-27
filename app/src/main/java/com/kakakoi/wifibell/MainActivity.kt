@@ -63,6 +63,15 @@ class MainActivity : AppCompatActivity() {
                 this,
                 Manifest.permission.ACCESS_FINE_LOCATION
             ) == PackageManager.PERMISSION_GRANTED -> {
+                val snackbar = Snackbar.make(
+                    findViewById(android.R.id.content),
+                    getString(R.string.request_tethering),
+                    Snackbar.LENGTH_INDEFINITE
+                )
+                snackbar.setAction(R.string.close, View.OnClickListener {
+                    snackbar.dismiss()
+                })
+                    .show()
                 Log.d(TAG, "onCreate: ACCESS_FINE_LOCATION is PERMISSION_GRANTED.")
             }
             shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION) -> {
