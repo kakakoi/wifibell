@@ -27,9 +27,9 @@ class MainViewModel(application: Application) : AndroidViewModel(application), S
         const val SIGNAL_LEVEL = 10
         const val SIGNAL_LEVEL_SAFE = 0.7
         const val SIGNAL_LEVEL_NORMAL = 0.4
-        const val SIGNAL_LEVEL_WARN = 0.3
-        lateinit var SSID_TEXT:String
-        lateinit var LEVEL_TEXT:String
+        const val SIGNAL_LEVEL_WARN = 0.2
+        lateinit var SSID_TEXT: String
+        lateinit var LEVEL_TEXT: String
     }
 
     private val cm: ConnectivityManager =

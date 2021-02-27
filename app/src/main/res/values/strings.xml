@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">WifiBell</string>
+    <string name="app_name">はなれたらなる</string>
     <string name="ping">ping</string>
     <string name="status">status</string>
     <string name="state_near">ちかい</string>
@@ -11,4 +11,7 @@
     <string name="navigation_description">下からスワイプで操作できます</string>
     <string name="ssid">SSID:</string>
     <string name="title_mainmodule">MainFeature</string>
+    <string name="required_location_permission_message">通信距離計算には権限が必要です</string>
+    <string name="config_system">システム設定</string>
+    <string name="educational_permission_message">位置情報権限許可はこのアプリで必須です。距離計算のみに使い、情報の保存、送信をしません</string>
 </resources>
