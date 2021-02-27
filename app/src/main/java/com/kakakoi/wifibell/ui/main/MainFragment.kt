@@ -38,7 +38,7 @@ class MainFragment : Fragment() {
 
         val signalLevelObserver = Observer<Int> { level ->
             binding.signalLevelText.setTextColor(Color.rgb(level, 0, 0))
-            if (level > viewModel.SIGNAL_LEVEL_THRESHOLD) {
+            if (level > viewModel.SIGNAL_LEVEL_FAR_THRESHOLD) {
                 binding.pingImage.imageTintList =
                     context?.getColorStateList(R.color.ping_color_state_list)
                 binding.statusImage.imageTintList =

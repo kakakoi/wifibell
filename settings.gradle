@@ -1,2 +1,3 @@
 rootProject.name = "WifiBell"
 include ':app'
+include ':mainmodule'

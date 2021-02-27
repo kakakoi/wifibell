@@ -26,7 +26,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application), S
         const val TAG = "MainViewModel"
         const val SIGNAL_LEVEL = 10
         const val SIGNAL_LEVEL_SAFE = 0.7
-        const val SIGNAL_LEVEL_NORMAL = 0.5
+        const val SIGNAL_LEVEL_NORMAL = 0.4
         const val SIGNAL_LEVEL_WARN = 0.3
         lateinit var SSID_TEXT:String
         lateinit var LEVEL_TEXT:String
@@ -37,7 +37,9 @@ class MainViewModel(application: Application) : AndroidViewModel(application), S
     private val wm = application.getSystemService(AppCompatActivity.WIFI_SERVICE) as WifiManager
     private val sm = application.getSystemService(AppCompatActivity.SENSOR_SERVICE) as SensorManager
     val sound = PingSound(application)
-    val SIGNAL_LEVEL_THRESHOLD = SIGNAL_LEVEL * SIGNAL_LEVEL_WARN
+    val SIGNAL_LEVEL_NEAR_THRESHOLD = SIGNAL_LEVEL * SIGNAL_LEVEL_SAFE
+    val SIGNAL_LEVEL_NORMAL_THRESHOLD = SIGNAL_LEVEL * SIGNAL_LEVEL_NORMAL
+    val SIGNAL_LEVEL_FAR_THRESHOLD = SIGNAL_LEVEL * SIGNAL_LEVEL_WARN
 
     private val request = NetworkRequest.Builder()
         .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
@@ -90,22 +92,24 @@ class MainViewModel(application: Application) : AndroidViewModel(application), S
 
     val logo: LiveData<Drawable> = Transformations.map(signalLevel) {
         when {
-            signalLevel.value!! > SIGNAL_LEVEL_THRESHOLD -> application.getDrawable(R.drawable.ic_baseline_escalator_warning_100)
-            else -> application.getDrawable(R.drawable.ic_baseline_person_100)
+            signalLevel.value!! > SIGNAL_LEVEL_FAR_THRESHOLD -> application.getDrawable(R.drawable.ic_baseline_escalator_warning_100)
+            else -> application.getDrawable(R.drawable.ic_baseline_person_outline_100)
         }
     }
 
     val animationResId: LiveData<Int> = Transformations.map(signalLevel) {
         when {
-            signalLevel.value!! > SIGNAL_LEVEL_THRESHOLD -> R.raw.rocket_in_space
+            signalLevel.value!! > SIGNAL_LEVEL_FAR_THRESHOLD -> R.raw.rocket_in_space
             else -> R.raw.lighthouse
         }
     }
 
     val stateText: LiveData<String> = Transformations.map(signalLevel) {
         when {
-            signalLevel.value!! > SIGNAL_LEVEL_THRESHOLD -> application.getString(R.string.state_near)
-            else -> application.getString(R.string.state_far)
+            signalLevel.value!! > SIGNAL_LEVEL_NEAR_THRESHOLD -> application.getString(R.string.state_near)
+            signalLevel.value!! > SIGNAL_LEVEL_NORMAL_THRESHOLD -> application.getString(R.string.state_normal)
+            signalLevel.value!! > SIGNAL_LEVEL_FAR_THRESHOLD -> application.getString(R.string.state_far)
+            else -> application.getString(R.string.state_very_far)
         }
     }
 
