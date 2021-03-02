@@ -30,6 +30,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application), S
         const val SIGNAL_LEVEL_WARN = 0.2
         lateinit var SSID_TEXT: String
         lateinit var LEVEL_TEXT: String
+        lateinit var UNSUPPORTED_TEXT: String
     }
 
     private val cm: ConnectivityManager =
@@ -123,12 +124,14 @@ class MainViewModel(application: Application) : AndroidViewModel(application), S
     init {
         SSID_TEXT = application.getString(R.string.ssid)
         LEVEL_TEXT = application.getString(R.string.level)
+        UNSUPPORTED_TEXT = application.getString(R.string.unsupported)
 
         load()
-        val accel: Sensor = sm.getDefaultSensor(
+        sm.getDefaultSensor(
             Sensor.TYPE_STEP_COUNTER
-        )
-        sm.registerListener(this, accel, SensorManager.SENSOR_DELAY_NORMAL)
+        )?.also {
+            sm.registerListener(this, it, SensorManager.SENSOR_DELAY_NORMAL)
+        }?.run { _signalLevelText.value = UNSUPPORTED_TEXT }
         cm.registerNetworkCallback(request, networkCallback)
     }
 
