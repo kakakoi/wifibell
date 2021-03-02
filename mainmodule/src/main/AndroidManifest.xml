@@ -3,6 +3,7 @@
     xmlns:dist="http://schemas.android.com/apk/distribution"
     package="com.kakakoi.mainmodule">
 
+    <application android:hasCode="false" />
     <dist:module
         dist:instant="false"
         dist:title="@string/title_mainmodule">
