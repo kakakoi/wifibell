@@ -16,4 +16,5 @@
     <string name="close">閉じる</string>
     <string name="config_system">システム設定</string>
     <string name="educational_permission_message">位置情報権限許可はこのアプリで必須です。距離計算のみに使い、情報の保存、送信をしません</string>
+    <string name="unsupported">歩数計未対応機種は現在未対応です</string>
 </resources>
