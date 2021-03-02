@@ -15,16 +15,16 @@ android {
         applicationId "com.kakakoi.wifibell"
         minSdkVersion 26
         targetSdkVersion 30
-        versionCode 2
-        versionName "0.1"
+        versionCode 4
+        versionName "0.3"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
         release {
-            minifyEnabled true
-            shrinkResources true
+            minifyEnabled false
+            shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }

@@ -1,20 +1,20 @@
 <resources>
-    <string name="app_name">はなれたらなる</string>
+    <string name="app_name">beeperkidapp</string>
     <string name="ping">ping</string>
     <string name="status">status</string>
-    <string name="state_near">ちかい</string>
-    <string name="state_normal">ふつう</string>
-    <string name="state_far">とおい</string>
-    <string name="state_very_far">どこにいるの？</string>
-    <string name="level">あんしんレベル</string>
-    <string name="ssid_wifi">SSIDが保護者スマホでなければWIFIを確認</string>
-    <string name="navigation_description">下からスワイプで操作できます</string>
+    <string name="state_near">near</string>
+    <string name="state_normal">normal</string>
+    <string name="state_far">far</string>
+    <string name="state_very_far">Where are you going?</string>
+    <string name="level">LEVEL</string>
+    <string name="ssid_wifi">Parent SSID?</string>
+    <string name="navigation_description">swipe from any edge</string>
     <string name="ssid">SSID:</string>
     <string name="title_mainmodule">MainFeature</string>
-    <string name="required_location_permission_message">通信距離計算には権限が必要です</string>
-    <string name="request_tethering">保護者スマホとテザリング接続してください</string>
-    <string name="close">閉じる</string>
-    <string name="config_system">システム設定</string>
-    <string name="educational_permission_message">位置情報権限許可はこのアプリで必須です。距離計算のみに使い、情報の保存、送信をしません</string>
-    <string name="unsupported">歩数計未対応機種は現在未対応です</string>
+    <string name="required_location_permission_message">Permission required</string>
+    <string name="request_tethering">Tether with your parent Mobile</string>
+    <string name="close">close</string>
+    <string name="config_system">config</string>
+    <string name="educational_permission_message">Location permissions are required for this app. Used only for distance calculation, does not store or send information</string>
+    <string name="unsupported">This model is not currently supported</string>
 </resources>
