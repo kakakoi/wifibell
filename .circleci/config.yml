@@ -20,8 +20,8 @@ jobs:
           name: 依存関係のダウンロード
           command: ./gradlew androidDependencies
       - run:
-          name: build apk
-          command: ./gradlew :app:assembleDebug
+          name: clean build
+          command: ./gradlew cleanBuildCache
       - save_cache:
           paths:
             - ~/.gradle
