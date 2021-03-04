@@ -17,6 +17,9 @@ jobs:
 #         name: Chmod permissions #if permission for Gradlew Dependencies fail, use this.
 #         command: sudo chmod +x ./gradlew
       - run:
+          name: Download google service json
+          command: curl -O https://joy-b.s3-ap-northeast-1.amazonaws.com/wifibell/google-services.json
+      - run:
           name: Download Dependencies
           command: ./gradlew androidDependencies
       - save_cache:
