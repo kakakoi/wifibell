@@ -19,6 +19,9 @@ jobs:
       - run:
           name: 依存関係のダウンロード
           command: ./gradlew androidDependencies
+      - run:
+          name: build apk
+          command: ./gradlew :app:assembleDebug
       - save_cache:
           paths:
             - ~/.gradle
