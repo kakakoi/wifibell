@@ -21,7 +21,7 @@ jobs:
           command: ./gradlew androidDependencies
       - run:
           name: clean build
-          command: ./gradlew -d :app:assembleDebug
+          command: ./gradlew -d :app:processDebugGoogleServices
       - save_cache:
           paths:
             - ~/.gradle
