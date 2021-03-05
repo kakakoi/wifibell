@@ -44,4 +44,4 @@ jobs:
           name: gsutil 依存関係のインストールとテスト結果データのコピー
           command: |
             sudo pip install -U crcmod
-            sudo gsutil -m cp -r -U `sudo gsutil ls gs://joy-b/wifibell-result | tail -1` ${CIRCLE_ARTIFACTS}/ | true
+            sudo gsutil -m cp -r -U `sudo gsutil ls gs://ci_bucket/wifibell-result | tail -1` ${CIRCLE_ARTIFACTS}/ | true
