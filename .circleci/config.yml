@@ -20,18 +20,27 @@ jobs:
           name: 依存関係のダウンロード
           command: ./gradlew androidDependencies
       - run:
-          name: clean build
-          command: ./gradlew -d :app:processDebugGoogleServices
-      - save_cache:
-          paths:
-            - ~/.gradle
-          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
-#      - run:
-#          name: テストの実行
-#          command: ./gradlew lint test
-      - store_artifacts: # for display in Artifacts: https://circleci.com/docs/2.0/artifacts/ 
-          path: app/build/reports
-          destination: reports
-      - store_test_results: # アーティファクト (https://circleci.com/ja/docs/2.0/artifacts/) に表示されるようにします
-          path: app/build/test-results
-      # テスト サマリー (https://circleci.com/ja/docs/2.0/collect-test-data/) に表示されるようにします
+          name: デバッグ APK とリリース APK のビルド
+          command: |
+            ./gradlew :app:assembleDebug
+            ./gradlew :app:assembleDebugAndroidTest
+      - run:
+          name: Google サービス アカウントの保存
+          command: echo $GCLOUD_SERVICE_KEY > ${HOME}/gcloud-service-key.json
+      - run:
+          name: gcloud の承認とデフォルト プロジェクトの設定
+          command: |
+            sudo gcloud auth activate-service-account --key-file=${HOME}/gcloud-service-key.json
+            sudo gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
+      - run:
+          name: Firebase Test Lab でのテスト
+          command: >
+            sudo gcloud firebase test android run \ 
+              --app <local_server_path>/<app_apk>.apk \ 
+              --test <local_server_path>/<app_test_apk>.apk \ 
+              --results-bucket cloud-test-${GOOGLE_PROJECT_ID}
+      - run:
+          name: gsutil 依存関係のインストールとテスト結果データのコピー
+          command: |
+            sudo pip install -U crcmod
+            sudo gsutil -m cp -r -U `sudo gsutil ls gs://joy-b/wifibell-result | tail -1` ${CIRCLE_ARTIFACTS}/ | true
