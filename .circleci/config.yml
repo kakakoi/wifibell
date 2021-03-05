@@ -15,7 +15,7 @@ jobs:
 #         command: sudo chmod +x ./gradlew
       - run:
           name: Google サービス アカウントの保存
-          command: echo $GCLOUD_SERVICE_KEY |base64 --decode > ${HOME}/gcloud-service-key.json
+          command: echo $GCLOUD_SERVICE_KEY > ${HOME}/gcloud-service-key.json
       - run:
           name: gcloud の承認とデフォルト プロジェクトの設定
           command: |
