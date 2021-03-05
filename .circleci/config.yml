@@ -30,15 +30,16 @@ jobs:
       - run:
           name: デバッグ APK とリリース APK のビルド
           command: |
-            ./gradlew :app:assembleDebug
             ./gradlew :app:assembleDebugAndroidTest
       - run:
           name: Firebase Test Lab でのテスト
           command: >
-            sudo gcloud firebase test android run \ 
-              --app app/build/outputs/apk/release/app-release.apk \ 
-              --test app/build/outputs/apk/debug/app-debug.apk \ 
-              --results-bucket cloud-test-${GOOGLE_PROJECT_ID}
+              sudo gcloud firebase test android run \
+              --app app/build/outputs/apk/release/app-release.apk \
+              --type robo \
+              --device model=walleye,version=28,locale=ja,orientation=portrait \
+              --results-bucket cloud-test-${GOOGLE_PROJECT_ID} \
+              --timeout 5m
       - run:
           name: gsutil 依存関係のインストールとテスト結果データのコピー
           command: |
