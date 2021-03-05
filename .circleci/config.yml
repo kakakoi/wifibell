@@ -21,9 +21,6 @@ jobs:
           command: |
             sudo gcloud auth activate-service-account --key-file=${HOME}/gcloud-service-key.json
             sudo gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
-#      - run:
-#          name: Download google service json
-#          command: curl https://joy-b.s3-ap-northeast-1.amazonaws.com/wifibell/{google-services.json} -o "/home/circleci/code/app/#1"
       - run:
           name: google service json
           command: echo $GSRVICE_FIREBASE > "/home/circleci/code/app/google-services.json"
@@ -39,8 +36,8 @@ jobs:
           name: Firebase Test Lab でのテスト
           command: >
             sudo gcloud firebase test android run \ 
-              --app <local_server_path>/<app_apk>.apk \ 
-              --test <local_server_path>/<app_test_apk>.apk \ 
+              --app app/build/outputs/apk/release/app-release.apk \ 
+              --test app/build/outputs/apk/debug/app-debug.apk \ 
               --results-bucket cloud-test-${GOOGLE_PROJECT_ID}
       - run:
           name: gsutil 依存関係のインストールとテスト結果データのコピー
