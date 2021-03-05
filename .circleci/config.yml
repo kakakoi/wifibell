@@ -41,7 +41,13 @@ jobs:
               --results-bucket cloud-test-${GOOGLE_PROJECT_ID} \
               --timeout 5m
       - run:
-          name: gsutil 依存関係のインストールとテスト結果データのコピー
+          name: Collect Artifacts
           command: |
             sudo pip install -U crcmod
-            sudo gsutil -m cp -r -U `sudo gsutil ls gs://ci_bucket/wifibell-result | tail -1` ${CIRCLE_ARTIFACTS}/ | true
+            sudo mkdir test_lab_results
+            sudo gsutil \
+                -m cp \
+                -r -U `sudo gsutil ls gs://ci_bucket | tail -1` test_lab_results/ \
+                | true
+      - store_artifacts:
+          path: test_lab_results/
