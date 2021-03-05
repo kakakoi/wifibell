@@ -37,7 +37,7 @@ jobs:
               sudo gcloud firebase test android run \
               --app app/build/outputs/apk/release/app-release.apk \
               --type robo \
-              --device model=walleye,version=28,locale=ja,orientation=portrait \
+              --device model=Nexus9,version=26,locale=ja,orientation=portrait \
               --results-bucket cloud-test-${GOOGLE_PROJECT_ID} \
               --timeout 5m
       - run:
