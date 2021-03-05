@@ -21,9 +21,12 @@ jobs:
           command: |
             sudo gcloud auth activate-service-account --key-file=${HOME}/gcloud-service-key.json
             sudo gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
+#      - run:
+#          name: Download google service json
+#          command: curl https://joy-b.s3-ap-northeast-1.amazonaws.com/wifibell/{google-services.json} -o "/home/circleci/code/app/#1"
       - run:
-          name: Download google service json
-          command: curl https://joy-b.s3-ap-northeast-1.amazonaws.com/wifibell/{google-services.json} -o "/home/circleci/code/app/#1"
+          name: google service json
+          command: echo $GSRVICE_FIREBASE > "/home/circleci/code/app/google-services.json"
       - run:
           name: 依存関係のダウンロード
           command: ./gradlew androidDependencies
