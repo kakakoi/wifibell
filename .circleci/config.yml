@@ -47,7 +47,7 @@ jobs:
             sudo mkdir test_lab_results
             sudo gsutil \
                 -m cp \
-                -r -U `sudo gsutil ls gs://ci_bucket | tail -1` test_lab_results/ \
+                -r -U `sudo gsutil ls gs://cloud-test-${GOOGLE_PROJECT_ID} | tail -1` test_lab_results/ \
                 | true
       - store_artifacts:
           path: test_lab_results/
