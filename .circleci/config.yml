@@ -1,0 +1,50 @@
+version: 2
+jobs:
+  build:
+    working_directory: ~/code
+    docker:
+      - image: circleci/android:api-30
+    environment:
+      JVM_OPTS: -Xmx3200m
+    steps:
+      - checkout
+      - restore_cache:
+          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
+      - run:
+          name: Save Google Service Account
+          command: echo $GCLOUD_SERVICE_KEY > ${HOME}/gcloud-service-key.json
+      - run:
+          name: gcloud auth. gloud config.
+          command: |
+            sudo gcloud auth activate-service-account --key-file=${HOME}/gcloud-service-key.json
+            sudo gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
+      - run:
+          name: Google Service json
+          command: echo $GSRVICE_FIREBASE > "/home/circleci/code/app/google-services.json"
+      - run:
+          name: Download Dependencies
+          command: ./gradlew androidDependencies
+      - run:
+          name: Build APK
+          command: |
+            ./gradlew :app:assembleDebug
+      - run:
+          name: Firebase Test Lab
+          command: >
+            sudo gcloud firebase test android run \
+              --app app/build/outputs/apk/debug/app-debug.apk \
+              --type robo \
+              --device model=walleye,version=28,locale=ja,orientation=portrait \
+              --results-bucket cloud-test-${GOOGLE_PROJECT_ID} \
+              --timeout 5m
+      - run:
+          name: Collect Artifacts
+          command: |
+            sudo pip install -U crcmod
+            sudo mkdir test_lab_results
+            sudo gsutil \
+                -m cp \
+                -r -U `sudo gsutil ls gs://cloud-test-${GOOGLE_PROJECT_ID} | tail -1` test_lab_results/ \
+                | true
+      - store_artifacts:
+          path: test_lab_results/
